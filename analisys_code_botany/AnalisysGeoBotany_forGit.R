@@ -20,19 +20,19 @@ df <- read.csv("GeoBotany_fic.sp_newName_newLocacion.csv", row.names = 1)
 
 write.csv(df, 'GeoBotany_fic.sp_newName.csv')# writing dataframe to text files
 
-# df$Fictitious.species <-1 #adding a dummy species
+df$Fictitious.species <-1 #adding a dummy species
 
 # doing a hierarchical cluster analysis of geobotanical data
 dist_bray <- vegdist(df) # the function computes dissimilarity Bray-Curtis indices
 hc <- hclust(dist_bray, method = "ward.D2") # hierarchical cluster analysis 
 hc_geo_bot_plt <-   # on a set of dissimilarities and methods for analyzing it.
   fviz_dend(hc, k = 7,                 # Cut in six groups
-            cex = 0.5,                 # label size
+            cex = 0.47,                 # label size
             color_labels_by_k = TRUE,  # color labels by groups
             ggtheme = theme_bw()     # Change theme
   )
 plot(hc_geo_bot_plt) # displaying a graph based on cluster analysis
-ggsave(filename = "hc_geo_bot_nL.png", plot = hc_geo_bot_plt, dpi = 600, 
+ggsave(filename = "hc_geo_bot_nL_v4.png", plot = hc_geo_bot_plt, dpi = 600, 
        units = "in", width = 7, height = 5) # saving a graph to a file
 
 ##nMDS plotting based on geobotanical data
@@ -43,34 +43,34 @@ nMDS <- metaMDS(df, trymax = 100, distance = "bray", autotransform = FALSE)
 data.scores <- as.data.frame(scores(nMDS))
 data.scores$site <- rownames(data.scores)
 data.scores$grp <- rownames(data.scores)
-data.scores$grp <- gsub("DT(\\d|\\d{2})", "DT", data.scores$grp)
-data.scores$grp <- gsub("LS(\\d|\\d{2})", "LS", data.scores$grp)
-data.scores$grp <- gsub("DL(\\d|\\d{2})", "DL", data.scores$grp)
-data.scores$grp <- gsub("WS(\\d|\\d{2})", "WS", data.scores$grp)
-data.scores$grp <- gsub("YF(\\d|\\d{2})", "YF", data.scores$grp)
-data.scores$grp <- gsub("FF(\\d|\\d{2})", "FF", data.scores$grp)
-data.scores$grp <- gsub("FG(\\d|\\d{2})", "FG", data.scores$grp)# creating 
-# a grouping variable
+data.scores$grp <- gsub("DuneTop(\\d|\\d{2})", "DuneTop", data.scores$grp)
+data.scores$grp <- gsub("LeeSlo(\\d|\\d{2})", "LeeSlo", data.scores$grp)
+data.scores$grp <- gsub("InterLow(\\d|\\d{2})", "InterLow", data.scores$grp)
+data.scores$grp <- gsub("WindSlo(\\d|\\d{2})", "WindSlo", data.scores$grp)
+data.scores$grp <- gsub("YoungF(\\d|\\d{2})", "YoungF", data.scores$grp)
+data.scores$grp <- gsub("MatureF(\\d|\\d{2})", "MatureF", data.scores$grp)
+data.scores$grp <- gsub("ClimaxF(\\d|\\d{2})", "ClimaxF", data.scores$grp)
+# creating a grouping variable
 
 
 species.scores <- as.data.frame(scores(nMDS, "species"))
 species.scores$species <- rownames(species.scores)
-grp.DT <- data.scores[data.scores$grp == "DT", ][chull(data.scores[
-  data.scores$grp == "DT", c("NMDS1", "NMDS2")]), ]  # hull values for grp DT
-grp.LS <- data.scores[data.scores$grp == "LS", ][chull(data.scores[
-  data.scores$grp == "LS", c("NMDS1", "NMDS2")]), ]  # hull values for grp LS
-grp.DL <- data.scores[data.scores$grp == "DL", ][chull(data.scores[
-  data.scores$grp == "DL", c("NMDS1", "NMDS2")]), ]  # hull values for grp DL
-grp.WS <- data.scores[data.scores$grp == "WS", ][chull(data.scores[
-  data.scores$grp == "WS", c("NMDS1", "NMDS2")]), ]  # hull values for grp WS
-grp.YF <- data.scores[data.scores$grp == "YF", ][chull(data.scores[
-  data.scores$grp == "YF", c("NMDS1", "NMDS2")]), ]  # hull values for grp YF
-grp.FF <- data.scores[data.scores$grp == "FF", ][chull(data.scores[
+grp.DuneTop <- data.scores[data.scores$grp == "DuneTop", ][chull(data.scores[
+  data.scores$grp == "DuneTop", c("NMDS1", "NMDS2")]), ]  # hull values for grp DuneTop
+grp.LeeSlo <- data.scores[data.scores$grp == "LeeSlo", ][chull(data.scores[
+  data.scores$grp == "LeeSlo", c("NMDS1", "NMDS2")]), ]  # hull values for grp LeeSlo
+grp.InterLow <- data.scores[data.scores$grp == "InterLow", ][chull(data.scores[
+  data.scores$grp == "InterLow", c("NMDS1", "NMDS2")]), ]  # hull values for grp InterLow
+grp.WindSlo <- data.scores[data.scores$grp == "WindSlo", ][chull(data.scores[
+  data.scores$grp == "WindSlo", c("NMDS1", "NMDS2")]), ]  # hull values for grp WindSlo
+grp.YoungF <- data.scores[data.scores$grp == "YoungF", ][chull(data.scores[
+  data.scores$grp == "YoungF", c("NMDS1", "NMDS2")]), ]  # hull values for grp YoungF
+grp.MatureF <- data.scores[data.scores$grp == "FF", ][chull(data.scores[
   data.scores$grp == "FF", c("NMDS1", "NMDS2")]), ]  # hull values for grp FF
-grp.FG <- data.scores[data.scores$grp == "FG", ][chull(data.scores[
-  data.scores$grp == "FG", c("NMDS1", "NMDS2")]), ]  # hull values for grp FG
-hull.data <- rbind(grp.DT, grp.LS, grp.DL, grp.WS, grp.YF, grp.FF, grp.FG)#combine 
-# groups
+grp.ClimaxF <- data.scores[data.scores$grp == "ClimaxF", ][chull(data.scores[
+  data.scores$grp == "ClimaxF", c("NMDS1", "NMDS2")]), ]  # hull values for grp ClimaxF
+hull.data <- rbind(grp.DuneTop, grp.LeeSlo, grp.InterLow, grp.WindSlo, 
+                   grp.YoungF, grp.MatureF, grp.ClimaxF)#combine groups
 
 geo_bot_plt <-
   ggplot() + # creating an nMDS graph
@@ -104,7 +104,7 @@ geo_bot_plt <-
         plot.background = element_blank())
 plot(geo_bot_plt)
 
-ggsave(filename = "nMDS_geo_bot(circle)_3var.png", plot = geo_bot_plt, 
+ggsave(filename = "nMDS_geo_bot(circle)_4var.png", plot = geo_bot_plt, 
        bg='#ffffff', dpi = 600, 
        units = "in", width = 7, height = 5) # saving a graph to a file
 
